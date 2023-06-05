@@ -25,7 +25,7 @@ router.post("/signup", async (req, res, next) => {
   // validacion de contraseña
   const regexPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm;
   if (regexPattern.test(req.body.password) === false) {
-    res.json({
+    res.status(400).json({
       errorMessage:
         "La contraseña no es suficientemente fuerte. Necesita al menos, una mayúscula, una minúscula, un caracter especial y mínimo 8 caracteres",
     });
@@ -63,6 +63,12 @@ router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
 
   // validaciones del login como que los campos estén llenos
+  if (email === "" || password === "") {
+    res.status(400).json({
+      errorMessage: "Los campos de email y contraseña son obligatorios",
+    });
+    return;
+  }
 
   try {
     // que el usuario exista
